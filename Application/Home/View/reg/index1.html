@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FHR 注册</title>
+<script type="text/javascript" src="{:C('JS_URL')}jquery-1.8.3.min.js"></script>
+
+<script>
+var itime = 59;//定义一个变量，倒计时初始化，从59秒开始
+function getTime(){
+    if(itime>=0){
+        if(itime==0){
+            //倒计时变成0时，
+            //要清除计时器
+            clearTimeout(act);
+            //设置按钮为初始状态
+            $("#getCode").val('免费获取手机验证码').attr('disabled',false);
+            itime=59;
+        }else{
+            //延迟一秒钟执行该函数。
+            var act = setTimeout('getTime()',1000);
+            //把倒计时的秒显示到按钮中
+            $("#getCode").val('还剩'+itime+'秒');
+            itime = itime - 1;
+        }
+    }
+}
+$(function(){
+    //定义一个函数,用于完成倒计时效果
+    $("#getCode").click(function(){
+        //ajax请求文件，调用短信发送的接口
+        $.ajax({
+            type:'get',
+            url:"{:C('SITE_URL')}public/note/send.php?telphone="+$("#telphone").val(),
+            success:function(msg){
+                //判断调用短信发送接口是否成功，
+                if(msg==1){
+                    //调用接口已经成功
+                    alert('短信验证码已经发送成功');
+                    $("#getCode").attr('disabled',true);    //要禁用该按钮
+                    //调用一个函数，完成倒计时效果。
+                    getTime();
+                }
+            }
+        });
+    });
+});
+</script>
+</head>
+<body>
+<form>
+    <table>
+        <tr>
+           <td>昵称 : </td>
+           <td><input type="text" name="name"/></td>
+        </tr>
+        <tr>
+         	<td>密码 : </td>
+         	<td><input type="password" name="password" id="pwd" /></td>
+        </tr>
+        <tr>
+            <td>手机 : </td>
+            <td><input type="text" name="telphone" id="telphone"/>
+        </tr>
+        <tr>
+            <td>验证码 : </td>
+            <td>
+                <input type="text" name="checkcode"/>
+                <input type="button" value="免费获取手机验证码" id="getCode"/>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="reset" value="重填"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" value="注册"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

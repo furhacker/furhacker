@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>网页标题</title>
+	<meta name="keywords" content="关键字列表" />
+	<meta name="description" content="网页描述" />
+	<link rel="stylesheet" type="text/css" href="" />
+	<style type="text/css">
+		#d2{
+			border:1px solid red;
+			width:100px;
+			height:20px;
+			display:inline-block;
+			overflow:hidden;
+		}
+		#d3{
+			height:20px;
+			display:inline-block;
+			background:yellow;
+		}
+	</style>
+	<script type="text/javascript">
+		//页面加载完成之后立刻执行的函数    
+		var sj = 0;//sj是记录游戏时间的
+		var count=0;//count记录星星个数
+		var dingshiqi;
+		var xingxingTime;
+		//window.onload=init;
+		function starGame(){
+			window.clearInterval(dingshiqi);
+			window.clearInterval(xingxingTime);
+			dingshiqi=window.setInterval("star()",400);
+			xingxingTime=window.setInterval("shijian()",1000);
+		}
+		//创建星星的函数
+		function star(){
+			//创建img
+			var obj = document.createElement("img");
+			//给星星添加随机宽度
+			obj.width = Math.floor(Math.random()*90+10);
+			
+			//给星星定位
+			var x = Math.floor(Math.random()*1200+60);
+			var y = Math.floor(Math.random()*500+60);
+			obj.style.position="absolute";
+			obj.style.top=y+"px";
+			obj.style.left=x+"px";
+			//给星星添加src属性
+			obj.src="star.gif";
+			//记录星星的个数
+			count++;
+			//进度条
+			var kuandu = document.getElementById("d3");
+			kuandu.style.width=count*5+"px";
+			//星星超过20个，游戏结束
+			if(count>20){
+				alert("游戏结束");
+				window.clearInterval(dingshiqi);
+				window.clearInterval(xingxingTime);
+				location.reload();
+			}
+			//把星星放到body中
+			document.body.appendChild(obj);
+			
+			//给星星加个点击事件
+			obj.onclick=removeStar;
+		}
+		//点击删除星星的函数
+		function removeStar(){
+			count--;
+			this.parentNode.removeChild(this);
+		}
+		//记录游戏时间的函数
+		function shijian(){
+			sj++;
+			var obj = document.getElementById("d1");
+			obj.innerHTML="游戏进行了"+sj+"秒";
+		}
+		//暂停游戏的函数
+		function zanting(){
+			alert("暂停游戏");
+		}
+	</script>
+</head>
+<body>
+	<input type="button" value="点击开始游戏" onclick="starGame()">
+	<input type="button" value="点击暂停游戏" onclick="zanting()">
+
+	<span id="d1">游戏进行了0秒</span>
+	<span id="d2"><span id="d3"></span></span><br/>
+	<a href="../index.php">返回首页</a>
+	<a href="./happy.html">返回上一页</a>
+</body>
+</html>
